@@ -1,5 +1,4 @@
 import React from "react";
-import Task from "./Task";
 
 const TaskContainer = React.forwardRef(({
     title = "Default Title",
