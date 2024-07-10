@@ -3,29 +3,34 @@ import { createContext, useEffect, useState } from "react";
 export const TasksContext = createContext();
 
 export const TasksProvider = ({ children }) => {
+    const URI = `https://${process.env.REACT_APP_PROJECT_TOKEN}.mockapi.io/tasks`;
     const [tasks, setTasks] = useState([]);
     const [toDoArr, setToDoArr] = useState([]);
     const [inProcessArr, setInProcessArr] = useState([]);
     const [doneArr, setDoneArr] = useState([]);
 
+    const fetchTasks = async () => {
+        try {
+            const response = await fetch(URI, {
+                method: 'GET',
+                headers: { 'content-type': 'application/json' },
+            });
+            const data = await response.json();
+            setTasks(data);
+        } catch (error) {
+            console.error("Error fetching tasks:", error);
+        }
+    };
     useEffect(() => {
-        const fetchTasks = async () => {
-            try {
-                const response = await fetch(`https://json.extendsclass.com/bin/${process.env.REACT_APP_API_KEY}`);
-                const data = await response.json();
-                setTasks(data);
-            } catch (error) {
-                console.error("Error fetching tasks:", error);
-            }
-        };
-
         fetchTasks();
     }, []);
 
     useEffect(() => {
-        setToDoArr(tasks.filter(task => task.status === 'todo'));
-        setInProcessArr(tasks.filter(task => task.status === 'inProgress'));
-        setDoneArr(tasks.filter(task => task.status === 'done'));
+        if (tasks && tasks.length > 0) {
+            setToDoArr(tasks.filter(task => task.status === 'todo'));
+            setInProcessArr(tasks.filter(task => task.status === 'inprogress'));
+            setDoneArr(tasks.filter(task => task.status === 'done'));
+        }
     }, [tasks]);
 
     const onDragEnd = async (result) => {
@@ -51,19 +56,14 @@ export const TasksProvider = ({ children }) => {
 
             newTasks = newTasks.map(task => {
                 if (task.id === removed.id) {
-                    task.status = destination.droppableId === 'inprogress' ? 'inProgress' : destination.droppableId;
+                    task.status = destination.droppableId === 'inprogress' ? 'inprogress' : destination.droppableId;
+                    updateTaskOnServer(task);
                 }
                 return task;
             });
         }
 
         setTasks(newTasks);
-
-        try {
-            await updateTasksOnServer(newTasks);
-        } catch (error) {
-            console.error("Error updating tasks:", error);
-        }
     };
 
     const reorder = (list, startIndex, endIndex) => {
@@ -102,24 +102,54 @@ export const TasksProvider = ({ children }) => {
         }
     };
 
-    const updateTasksOnServer = async (tasks) => {
-        const response = await fetch(`https://json.extendsclass.com/bin/${process.env.REACT_APP_API_KEY}`, {
+    const updateTaskOnServer = async (task) => {
+        const response = await fetch(`${URI}/${task.id}`, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json",
-                "Security-key": "Your security key"
+                "content-type": "application/json",
             },
-            body: JSON.stringify(tasks)
+            body: JSON.stringify(task)
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to update task on the server.");
+        }
+
+        return await response.json();
+    };
+
+    const addTasksOnServer = async (task) => {
+        const response = await fetch(URI, {
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+            },
+            body: JSON.stringify(task)
         });
 
         if (!response.ok) {
             throw new Error("Failed to update tasks on the server.");
         }
+
+        return await response.json();
+    };
+
+    const addTask = async (newTask) => {
+        try {
+            await addTasksOnServer(newTask);
+            const updatedTasks = [...tasks, newTask];
+            setTasks(updatedTasks);
+            await fetchTasks();
+        } catch (error) {
+            console.error("Error adding new task:", error);
+        }
     };
 
     return (
-        <TasksContext.Provider value={{ toDoArr, inProcessArr, doneArr, onDragEnd }}>
+        <TasksContext.Provider value={{ toDoArr, inProcessArr, doneArr, onDragEnd, addTask }}>
             {children}
         </TasksContext.Provider>
     );
 };
+
+export default TasksProvider;

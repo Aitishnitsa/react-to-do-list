@@ -8,7 +8,7 @@ const Board = () => {
     const { toDoArr, inProcessArr, doneArr, onDragEnd } = useContext(TasksContext);
 
     return (
-        <div className="flex flex-col sm:flex-row justify-around space-y-2 sm:space-y-0 border-2 border-black rounded-lg w-5/6 sm:w-2/3 h-fit sm:h-2/3 mb-4 sm:m-0 py-2 px-4 overflow-y-auto">
+        <main className="flex flex-col sm:flex-row justify-around space-y-2 sm:space-y-0 border-2 border-black rounded-lg w-5/6 sm:w-2/3 h-fit sm:h-2/3 mb-4 sm:m-0 py-2 px-4 overflow-y-auto">
             <DragDropContext onDragEnd={onDragEnd}>
                 <Droppable droppableId="todo">
                     {(provided) => (
@@ -88,7 +88,7 @@ const Board = () => {
                     )}
                 </Droppable>
             </DragDropContext>
-        </div>
+        </main>
     );
 };
 
