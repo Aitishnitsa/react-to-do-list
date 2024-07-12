@@ -16,8 +16,9 @@ const TaskContainer = React.forwardRef(({
         setNewTaskText(e.target.value);
     }
 
-    const handleAddTask = () => {
-        // setAddingMode(true)
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (newTaskText.trim() === '') return; // Prevent adding empty tasks
         let status = title.toLowerCase().replace(/\s/g, '');
         const newTask = {
             "status": status, "text": newTaskText
@@ -25,22 +26,31 @@ const TaskContainer = React.forwardRef(({
         addTask(newTask);
         setAddingMode(false);
         setNewTaskText('');
+        if (newTaskText.trim() === "") {
+            console.log("Input is empty");
+        } else {
+            console.log("Input is not empty");
+        }
     };
 
     return (
         <div ref={ref} {...droppableProps} className="sm:w-1/3 p-2 mx-2">
-            <h1 className={`${titleColor} w-full rounded-full py-1 flex justify-center`}>
+            <h1 className={`${titleColor} w-full rounded-full py-1 flex justify-center font-bold`}>
                 {title}
             </h1>
             {children}
-            <div className={`${addingMode ? 'border-2 border-black rounded-md w-full py-1 px-2 my-2' : 'hidden'}`}>
+            <form
+                onSubmit={handleSubmit}
+                className={`${addingMode ? 'border-2 border-black rounded-md w-full py-1 px-2 my-2' : 'hidden'}`}
+            >
                 <input
                     value={newTaskText}
                     onChange={handleInput}
                     name='input'
-                    className="border-none w-1/2" />
-                <button type='submit' onClick={handleAddTask}>Ok</button>
-            </div>
+                    placeholder="Enter new task"
+                    className="focus-visible:outline-none w-full"
+                />
+            </form>
             <button
                 className="px-2 opacity-25 hover:opacity-100 transition ease-in-out duration-150"
                 onClick={() => setAddingMode(true)}

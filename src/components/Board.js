@@ -26,7 +26,7 @@ const Board = () => {
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
                                         >
-                                            <Task text={task.text} isDragging={snapshot.isDragging} />
+                                            <Task id={task.id} text={task.text} isDragging={snapshot.isDragging} />
                                         </div>
                                     )}
                                 </Draggable>
@@ -52,7 +52,7 @@ const Board = () => {
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
                                         >
-                                            <Task text={task.text} isDragging={snapshot.isDragging} />
+                                            <Task id={task.id} text={task.text} isDragging={snapshot.isDragging} />
                                         </div>
                                     )}
                                 </Draggable>
@@ -78,7 +78,7 @@ const Board = () => {
                                             {...provided.draggableProps}
                                             {...provided.dragHandleProps}
                                         >
-                                            <Task text={task.text} isDragging={snapshot.isDragging} />
+                                            <Task id={task.id} text={task.text} isDragging={snapshot.isDragging} />
                                         </div>
                                     )}
                                 </Draggable>

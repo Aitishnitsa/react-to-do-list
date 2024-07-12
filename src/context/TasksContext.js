@@ -134,6 +134,22 @@ export const TasksProvider = ({ children }) => {
         return await response.json();
     };
 
+    const deleteTaskOnServer = async (id) => {
+        const response = await fetch(`${URI}/${id}`, {
+            method: "DELETE",
+            // headers: {
+            //     "content-type": "application/json",
+            // },
+            // body: JSON.stringify(task)
+        });
+
+        if (!response.ok) {
+            throw new Error("Failed to update task on the server.");
+        }
+
+        return await response.json();
+    }
+
     const addTask = async (newTask) => {
         try {
             await addTasksOnServer(newTask);
@@ -145,8 +161,19 @@ export const TasksProvider = ({ children }) => {
         }
     };
 
+    const deleteTask = async (task) => {
+        try {
+            await deleteTaskOnServer(task);
+            const updatedTasks = [...tasks, task];
+            setTasks(updatedTasks);
+            await fetchTasks();
+        } catch (error) {
+            console.error("Error deleting task:", error);
+        }
+    }
+
     return (
-        <TasksContext.Provider value={{ toDoArr, inProcessArr, doneArr, onDragEnd, addTask }}>
+        <TasksContext.Provider value={{ toDoArr, inProcessArr, doneArr, onDragEnd, addTask, deleteTask }}>
             {children}
         </TasksContext.Provider>
     );
