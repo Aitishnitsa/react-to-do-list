@@ -137,10 +137,6 @@ export const TasksProvider = ({ children }) => {
     const deleteTaskOnServer = async (id) => {
         const response = await fetch(`${URI}/${id}`, {
             method: "DELETE",
-            // headers: {
-            //     "content-type": "application/json",
-            // },
-            // body: JSON.stringify(task)
         });
 
         if (!response.ok) {

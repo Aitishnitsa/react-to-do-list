@@ -35,7 +35,7 @@ const TaskContainer = React.forwardRef(({
 
     return (
         <div ref={ref} {...droppableProps} className="sm:w-1/3 p-2 mx-2">
-            <h1 className={`${titleColor} w-full rounded-full py-1 flex justify-center font-bold`}>
+            <h1 className={`${titleColor} text-black dark:text-black w-full rounded-full py-1 flex justify-center font-bold`}>
                 {title}
             </h1>
             {children}
