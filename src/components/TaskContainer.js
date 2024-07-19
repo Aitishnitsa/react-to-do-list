@@ -11,19 +11,12 @@ const TaskContainer = React.forwardRef(({
     const [addingMode, setAddingMode] = useState(false);
     const [newTaskText, setNewTaskText] = useState('');
 
-    const handleInput = (e) => {
-        e.preventDefault();
-        setNewTaskText(e.target.value);
-    }
+    const handleInput = (e) => setNewTaskText(e.target.value);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        if (newTaskText.trim() === '') return; // Prevent adding empty tasks
-        let status = title.toLowerCase().replace(/\s/g, '');
-        const newTask = {
-            "status": status, "text": newTaskText
-        };
-        addTask(newTask);
+        if (newTaskText.trim() === '') return;
+        addTask({ status: title.toLowerCase().replace(/\s/g, ''), text: newTaskText });
         setAddingMode(false);
         setNewTaskText('');
     };
@@ -34,18 +27,17 @@ const TaskContainer = React.forwardRef(({
                 {title}
             </h1>
             {children}
-            <form
-                onSubmit={handleSubmit}
-                className={`${addingMode ? 'border-2 border-black dark:border-white rounded-md w-full py-1 px-2 my-2' : 'hidden'}`}
-            >
-                <input
-                    value={newTaskText}
-                    onChange={handleInput}
-                    name='input'
-                    placeholder="Enter new task"
-                    className="focus-visible:outline-none w-full bg-transparent"
-                />
-            </form>
+            {addingMode && (
+                <form onSubmit={handleSubmit} className="border-2 border-black dark:border-white rounded-md w-full py-1 px-2 my-2">
+                    <input
+                        value={newTaskText}
+                        onChange={handleInput}
+                        name='input'
+                        placeholder="Enter new task"
+                        className="focus-visible:outline-none w-full bg-transparent"
+                    />
+                </form>
+            )}
             <button
                 className="animate-flip-up animate-delay-300 px-2 opacity-25 hover:opacity-100 transition ease-in-out duration-150"
                 onClick={() => setAddingMode(true)}

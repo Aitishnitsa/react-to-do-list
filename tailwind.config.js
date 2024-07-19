@@ -58,6 +58,12 @@ module.exports = {
         'slide-in-elliptic-right-fwd': 'slide-in-elliptic-right-fwd 1s cubic-bezier(0.250, 0.460, 0.450, 0.940) both',
         'tracking-in-expand': 'tracking-in-expand 0.7s cubic-bezier(0.215, 0.610, 0.355, 1.000) both'
       },
+      animationDelay: {
+        400: "400ms",
+        600: "600ms",
+        800: "800ms",
+        900: "900ms",
+      },
     },
   },
   plugins: [
