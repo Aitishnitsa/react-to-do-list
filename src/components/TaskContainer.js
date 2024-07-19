@@ -26,33 +26,28 @@ const TaskContainer = React.forwardRef(({
         addTask(newTask);
         setAddingMode(false);
         setNewTaskText('');
-        if (newTaskText.trim() === "") {
-            console.log("Input is empty");
-        } else {
-            console.log("Input is not empty");
-        }
     };
 
     return (
         <div ref={ref} {...droppableProps} className="sm:w-1/3 p-2 mx-2">
-            <h1 className={`${titleColor} text-black dark:text-black w-full rounded-full py-1 flex justify-center font-bold`}>
+            <h1 className={`${titleColor} text-black dark:text-black animate-jump-in w-full rounded-full py-1 flex justify-center font-bold relative z-10`}>
                 {title}
             </h1>
             {children}
             <form
                 onSubmit={handleSubmit}
-                className={`${addingMode ? 'border-2 border-black rounded-md w-full py-1 px-2 my-2' : 'hidden'}`}
+                className={`${addingMode ? 'border-2 border-black dark:border-white rounded-md w-full py-1 px-2 my-2' : 'hidden'}`}
             >
                 <input
                     value={newTaskText}
                     onChange={handleInput}
                     name='input'
                     placeholder="Enter new task"
-                    className="focus-visible:outline-none w-full"
+                    className="focus-visible:outline-none w-full bg-transparent"
                 />
             </form>
             <button
-                className="px-2 opacity-25 hover:opacity-100 transition ease-in-out duration-150"
+                className="animate-flip-up animate-delay-300 px-2 opacity-25 hover:opacity-100 transition ease-in-out duration-150"
                 onClick={() => setAddingMode(true)}
             >
                 + add task
